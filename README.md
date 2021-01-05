@@ -84,7 +84,7 @@ Run the Ansible-Playbooks in the right order
 
 ## Ports
 
-| Anwendung | Protocol      | Port      |
-|-----------|---------------|-----------|
-| Portainer | HTTP          | 9000      |
-| PiHole    | HTTP / HTTPS  | 80 / 443  |
+| Anwendung | Protocol      | Port         |
+|-----------|---------------|--------------|
+| Portainer | HTTP          | 9000         |
+| PiHole    | HTTP / HTTPS  | 8080 / 8443  |
