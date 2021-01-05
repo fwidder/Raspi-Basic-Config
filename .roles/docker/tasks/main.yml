@@ -1,0 +1,35 @@
+---
+# tasks file for docker
+- name: Check is docker installed
+  shell: command -v docker
+  register: is_docker_installed
+  ignore_errors: yes
+  changed_when: is_docker_installed.rc != 0
+
+- name: Download Docker install Script if needed
+  get_url:
+    url: https://get.docker.com
+    dest: /tmp/install-docker.sh
+    mode: '0770'
+  when: is_docker_installed.rc != 0
+
+- name: Install Docker if needed
+  become: yes
+  shell: ./install-docker.sh
+  args:
+    chdir: /tmp/
+  when: is_docker_installed.rc != 0
+
+- name: "Make sure Docker Apt Packages are installed"
+  become: yes
+  apt: 
+    name: 
+      - docker
+      - docker-compose
+    state: present
+
+- name: "Make sure Docker Pip Packages are installed"
+  pip:
+    name: 
+      - docker-py
+      - docker-compose

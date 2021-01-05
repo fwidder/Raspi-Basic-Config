@@ -9,3 +9,5 @@
   roles:
     - update-pi
     - reboot-pi
+    - docker
+    - portainer

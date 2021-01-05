@@ -1,10 +1,13 @@
 ---
 # tasks file for create-raspi-user
-- name: "Ensure group '{{ user.name }}' exists"
+- name: "Ensure group '{{ user.name }}' and 'docker' exists"
   become: yes
   group:
-    name: "{{ user.name }}"
+    name: "{{ item }}"
     state: present
+  loop_with:
+    - "docker"
+    - {{ user.name }}
 
 - name: "Ensure user '{{ user.name }}' exists"
   become: yes
@@ -22,6 +25,7 @@
     name: "{{ user.name }}"
     groups: 
       - adm
+      - docker
       - dialout
       - cdrom
       - sudo

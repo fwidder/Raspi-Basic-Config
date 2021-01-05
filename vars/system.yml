@@ -3,3 +3,7 @@ system:
     - htop
     - git
     - nano
+    - python3-pip
+    - apache2-utils
+  docker:
+    store: ~/.docker-data

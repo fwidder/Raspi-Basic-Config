@@ -2,3 +2,7 @@ user:
   name: xxx
   fullname: xxx
   password: xxx
+
+portainer:
+  admin:
+    password: xxx

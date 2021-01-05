@@ -52,19 +52,25 @@ sudo umount /dev/sda1
 
 Run the Ansible-Playbooks in the right order
 
-1. Create the new User for the Raspi defined in `vars/user.yml`
+1. Install Galaxy-Requirements from `requirements-collections.yml`
+
+    ```bash
+    ansible-galaxy collection install -r requirements-collections.yml
+    ```
+
+2. Create the new User for the Raspi defined in `vars/user.yml`
 
     ```bash
     ansible-playbook 01-create-remote-user.yml
     ```
 
-2. Remove the 'pi' User and Group
+3. Remove the 'pi' User and Group
 
     ```bash
     ansible-playbook 02-remove-pi-user.yml
     ```
 
-3. Update the System and install needed Packages defined in `vars/system.yml`
+4. Update the System and install needed Packages defined in `vars/system.yml`
 
     ```bash
     ansible-playbook 03-update-and-install-software.yml

@@ -1,0 +1,28 @@
+---
+# tasks file for portainer- name: data container
+- name: "Encrypt Admin Password"
+  shell: htpasswd -nb -B admin {{ portainer.admin.password }} | cut -d ":" -f 2
+  register: encrapted_portainer_password
+
+- name: "Start Container for 'Portainer'"
+  become: yes
+  community.docker.docker_container:
+    command: "--admin-password '{{ encrapted_portainer_password.stdout }}'"
+    container_default_behavior: compatibility
+    name: "Portainer"
+    image: "portainer/portainer"
+    state: "started"
+    pull: yes
+    ports:
+      - "9000:9000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "{{ system.docker.store }}/Portainer/data:/data"
+
+- name: "Wait for Portainer to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:9000' fo 60 Secconds"
+  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:9000"
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 60
+  delay: 1
+  changed_when: false
