@@ -1,0 +1,38 @@
+---
+# tasks file for pihole
+
+- name: "Start Container for 'PiHole'"
+  become: yes
+  community.docker.docker_container:
+    capabilities: 
+      - "NET_ADMIN"
+    container_default_behavior: compatibility
+    dns_servers:
+      - 127.0.0.1
+      - 8.8.8.8
+    env:
+      TZ: "{{ system.docker.timezone }}"
+      WEBPASSWORD: "{{ pihole.admin.password }}"
+    name: "PiHole"
+    image: "pihole/pihole:latest"
+    state: "started"
+    pull: yes
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67"
+      - "80:80"
+      - "443:443"
+    recreate: yes
+    restart_policy: "unless-stopped"
+    volumes:
+      - "{{ system.docker.store }}/PiHole/etc/pihole/:/etc/pihole/"
+      - "{{ system.docker.store }}/PiHole/etc/dnsmasq.d/:/etc/dnsmasq.d/"
+
+- name: "Wait for PiHole to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:80' fo 60 Secconds"
+  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:80"
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 60
+  delay: 1
+  changed_when: false

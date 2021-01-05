@@ -7,6 +7,5 @@
     - ansible_user: "{{ user.name }}"
     - ansible_password: "{{ user.password }}"
   roles:
-    - update-pi
-    - reboot-pi
-    - docker
+    - portainer
+    - pihole

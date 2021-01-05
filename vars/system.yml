@@ -6,4 +6,5 @@ system:
     - python3-pip
     - apache2-utils
   docker:
-    store: ~/.docker-data
+    store: '~/.docker-data'
+    timezone: 'Europe/Berlin'

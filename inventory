@@ -1,5 +1,8 @@
 [PI]
+PI-3
+PI-3-WIFI
 PI-Zero
+
 
 [PI:vars]
 ansible_python_interpreter=/usr/bin/python3

@@ -75,3 +75,16 @@ Run the Ansible-Playbooks in the right order
     ```bash
     ansible-playbook 03-update-and-install-software.yml
     ```
+
+5. Add Docker Containers defined in `04-add-containers.yml`
+
+    ```bash
+    ansible-playbook 04-add-containers.yml
+    ```
+
+## Ports
+
+| Anwendung | Protocol      | Port      |
+|-----------|---------------|-----------|
+| Portainer | HTTP          | 9000      |
+| PiHole    | HTTP / HTTPS  | 80 / 443  |

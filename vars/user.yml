@@ -6,3 +6,7 @@ user:
 portainer:
   admin:
     password: xxx
+
+pihole:
+  admin:
+    password: xxx

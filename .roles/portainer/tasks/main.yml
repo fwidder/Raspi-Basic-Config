@@ -1,5 +1,5 @@
 ---
-# tasks file for portainer- name: data container
+# tasks file for portainer
 - name: "Encrypt Admin Password"
   shell: htpasswd -nb -B admin {{ portainer.admin.password }} | cut -d ":" -f 2
   register: encrapted_portainer_password
@@ -9,12 +9,16 @@
   community.docker.docker_container:
     command: "--admin-password '{{ encrapted_portainer_password.stdout }}'"
     container_default_behavior: compatibility
+    env:
+      TZ: "{{ system.docker.timezone }}"
     name: "Portainer"
     image: "portainer/portainer"
     state: "started"
     pull: yes
     ports:
       - "9000:9000"
+    recreate: yes
+    restart_policy: "unless-stopped"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "{{ system.docker.store }}/Portainer/data:/data"
