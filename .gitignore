@@ -13,3 +13,7 @@
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/ansible,vscode
+
+# Add to .gitignore for no accidentally commits of private Config! 
+vars/user.yml
+host_vars/PI-Zero/PI-Zero.yml
