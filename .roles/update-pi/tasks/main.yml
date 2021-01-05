@@ -1,0 +1,18 @@
+---
+# tasks file for update-pi
+- name: Update apt repo and cache if needed
+  become: yes
+  apt: 
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Upgrade all apt packages
+  become: yes
+  apt: 
+    upgrade: dist
+
+- name: "Make sure Apt Packages are installed: {{ system.aptpackages }}"
+  become: yes
+  apt: 
+    name: "{{ system.aptpackages }}"
+    state: present

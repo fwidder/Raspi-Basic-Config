@@ -1,0 +1,5 @@
+system:
+  aptpackages:
+    - htop
+    - git
+    - nano

@@ -1,0 +1,54 @@
+---
+# tasks file for create-raspi-user
+- name: "Ensure group '{{ user.name }}' exists"
+  become: yes
+  group:
+    name: "{{ user.name }}"
+    state: present
+
+- name: "Ensure user '{{ user.name }}' exists"
+  become: yes
+  user:
+    name: "{{ user.name }}"
+    comment: "{{ user.fullname }}"
+    group: "{{ user.name }}"
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_rsa
+
+- name: "Ensure user '{{ user.name }}' is in all needed Groups"
+  become: yes
+  user:
+    name: "{{ user.name }}"
+    groups: 
+      - adm
+      - dialout
+      - cdrom
+      - sudo
+      - audio
+      - video
+      - plugdev
+      - games
+      - users
+      - input
+      - netdev
+      - gpio
+      - i2c
+      - spi
+    append: yes
+
+- name: "Ensure using 'sudo' without password is enabeld for Group 'sudo'"
+  become: yes
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- name: "Ensure authorized key for current User exists"
+  become: yes
+  authorized_key:
+    user: "{{ user.name }}"
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
