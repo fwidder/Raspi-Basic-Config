@@ -29,7 +29,16 @@
     state: present
 
 - name: "Make sure Docker Pip Packages are installed"
+  become: yes
   pip:
     name: 
       - docker-py
       - docker-compose
+
+- name: Make Sure Docker Data-Dir exists
+  become: yes
+  file:
+    path: "{{ system.docker.store }}"
+    state: directory
+    mode: 0777
+    recurse: yes
