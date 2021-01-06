@@ -1,0 +1,42 @@
+---
+# tasks file for dokuwiki
+- name: "Get UID for User {{ user.name }}"
+  shell: "id -u {{ user.name }}"
+  register: user_id
+  changed_when: false
+
+- name: "Get GID for User {{ user.name }}"
+  shell: "id -g {{ user.name }}"
+  register: group_id
+  changed_when: false
+
+- name: "Start Container for 'Dokuwiki'"
+  community.docker.docker_container:
+    container_default_behavior: compatibility
+    env:
+      TZ: "{{ system.docker.timezone }}"
+      PUID: "{{ user_id.stdout }}"
+      PGID: "{{ group_id.stdout }}"
+    name: "Dokuwiki"
+    network_mode: default
+    networks:
+      - name: internal_network
+        aliases:
+          - "dokuwiki"
+    image: "ghcr.io/linuxserver/dokuwiki"
+    state: "started"
+    pull: yes
+    ports:
+      - "8081:80"
+    recreate: yes
+    restart_policy: "unless-stopped"
+    volumes:
+      - "{{ system.docker.store }}/Dokuwiki/config:/config"
+
+- name: "Wait for Dokuwiki to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:8081' fo 60 Secconds"
+  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:8081"
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 60
+  delay: 1
+  changed_when: false

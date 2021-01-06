@@ -10,3 +10,5 @@ system:
     timezone: 'Europe/Berlin'
   domain: 'xxx'
   subdomain: 'www,'
+  proxy:
+    overwriteconfig: yes

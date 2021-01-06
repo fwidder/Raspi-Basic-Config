@@ -87,5 +87,6 @@ Run the Ansible-Playbooks in the right order
 | Anwendung     | Protocol      | Port  |
 |---------------|---------------|-------|
 | Docker Swag   | HTTPS         | 443   |
+| PiHole        | HTTP          | 8080  |
+| Dokuwiki      | HTTP          | 8081  |
 | Portainer     | HTTP          | 9000  |
-| PiHole        | HTTP / HTTPS  | 8080  |

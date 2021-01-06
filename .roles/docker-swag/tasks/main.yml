@@ -1,6 +1,5 @@
 ---
 # tasks file for docker-swag
-
 - name: Make Sure Docker Swag www-Dir exists
   file:
     path: "{{ item }}"
@@ -14,7 +13,22 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items:
-    - { src: "html/index.html.j2" , dest: "{{ system.docker.store }}/Docker Swag/www/index.html"}
+    - { src: "www/index.html.j2" , dest: "{{ system.docker.store }}/Docker Swag/www/index.html"}
+
+- name: Make Sure Docker Swag config-Dir exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ system.docker.store }}/Docker Swag/config/nginx/proxy-confs"
+
+- name: "Copy Config Files"
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "config/dokuwiki.subfolder.conf.sample" , dest: "{{ system.docker.store }}/Docker Swag/config/nginx/proxy-confs/dokuwiki.subfolder.conf.sample"}
 
 - name: "Get UID for User {{ user.name }}"
   shell: "id -u {{ user.name }}"
@@ -70,6 +84,7 @@
 - name: Enable Proxys
   include_tasks: proxys.yml
   with_items:
+    - "dokuwiki"
     - "pihole"
     - "portainer"
 

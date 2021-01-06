@@ -11,8 +11,7 @@
       src: "{{ system.docker.store }}/Docker Swag/config/nginx/proxy-confs/{{ item }}.subfolder.conf.sample"
       dest: "{{ system.docker.store }}/Docker Swag/config/nginx/proxy-confs/{{ item }}.subfolder.conf"
       remote_src: yes
-    when: 
-      - not config_file_stat.stat.exists
+    when: not config_file_stat.stat.exists or system.proxy.overwriteconfig
 
   when: 
     - item in role_names

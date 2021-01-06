@@ -16,6 +16,9 @@
     <h1>Inhalt</h1>
     <div class="list-group">
       <a href="/" class="list-group-item list-group-item-action">Nginx</a>
+      {% if 'dokuwiki' in role_names %}
+      <a href="/dokuwiki" class="list-group-item list-group-item-action">Dokuwiki</a>
+      {% endif %}
       {% if 'pihole' in role_names %}
       <a href="/pihole/admin" class="list-group-item list-group-item-action">PiHole</a>
       {% endif %}
