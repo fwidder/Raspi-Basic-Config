@@ -2,7 +2,6 @@
 # tasks file for pihole
 
 - name: "Start Container for 'PiHole'"
-  become: yes
   community.docker.docker_container:
     capabilities: 
       - "NET_ADMIN"
@@ -14,6 +13,11 @@
       TZ: "{{ system.docker.timezone }}"
       WEBPASSWORD: "{{ pihole.admin.password }}"
     name: "PiHole"
+    network_mode: default
+    networks:
+      - name: internal_network
+        aliases:
+          - "pihole"
     image: "pihole/pihole:latest"
     state: "started"
     pull: yes

@@ -5,13 +5,17 @@
   register: encrapted_portainer_password
 
 - name: "Start Container for 'Portainer'"
-  become: yes
   community.docker.docker_container:
     command: "--admin-password '{{ encrapted_portainer_password.stdout }}'"
     container_default_behavior: compatibility
     env:
       TZ: "{{ system.docker.timezone }}"
     name: "Portainer"
+    network_mode: default
+    networks:
+      - name: internal_network
+        aliases:
+          - "portainer"
     image: "portainer/portainer"
     state: "started"
     pull: yes

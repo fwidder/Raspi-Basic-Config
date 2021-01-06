@@ -41,4 +41,10 @@
     path: "{{ system.docker.store }}"
     state: directory
     mode: 0777
+    user: "{{ user.name }}"
+    group: "{{ user.name }}"
     recurse: yes
+
+- name: Make Sure Docker Network exists
+  community.general.docker_network:
+    name: internal_network

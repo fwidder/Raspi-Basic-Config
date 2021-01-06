@@ -9,4 +9,4 @@
   roles:
     - portainer
     - pihole
-    - nginx
+    - docker-swag

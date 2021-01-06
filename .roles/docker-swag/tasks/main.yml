@@ -1,0 +1,116 @@
+---
+# tasks file for docker-swag
+
+- name: Make Sure Docker Swag www-Dir exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ system.docker.store }}/Docker Swag/www/"
+
+- name: "Copy HTML Templates"
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "html/index.html.j2" , dest: "{{ system.docker.store }}/Docker Swag/www/index.html"}
+
+- name: "Get UID for User {{ user.name }}"
+  shell: "id -u {{ user.name }}"
+  register: user_id
+  changed_when: false
+
+- name: "Get GID for User {{ user.name }}"
+  shell: "id -g {{ user.name }}"
+  register: group_id
+  changed_when: false
+
+- name: "Start Container for 'Docker Swag'"
+  community.docker.docker_container:
+    capabilities: 
+      - "NET_ADMIN"
+    container_default_behavior: compatibility
+    env:
+      TZ: "{{ system.docker.timezone }}"
+      PUID: "{{ user_id.stdout }}"
+      PGID: "{{ group_id.stdout }}"
+      URL: "{{ system.domain }}"
+      SUBDOMAINS: "{{ system.subdomain }}"
+      VALIDATION: "http"
+      EMAIL: "{{ user.email }}"
+      ONLY_SUBDOMAINS: "false"
+      STAGING: "false"
+    name: "DockerSwag"
+    network_mode: default
+    networks:
+      - name: internal_network
+        aliases:
+          - "dockerswag"
+    image: "ghcr.io/linuxserver/swag"
+    state: "started"
+    pull: yes
+    ports:
+      - "80:80"
+      - "443:443"
+    recreate: yes
+    restart_policy: "unless-stopped"
+    volumes:
+      - "{{ system.docker.store }}/Docker Swag/config:/config"
+      - "{{ system.docker.store }}/Docker Swag/www:/config/www"
+
+- name: "Wait for Docker Swag to be Up @ 'https://{{ system.domain }}:443' fo 60 Secconds"
+  command: "curl --silent -I https://{{ system.domain }}:443"
+  register: result
+  until: result.stdout.find("HTTP/2 200") != -1
+  retries: 60
+  delay: 1
+  changed_when: false
+
+- name: Enable Proxys
+  include_tasks: proxys.yml
+  with_items:
+    - "pihole"
+    - "portainer"
+
+- name: "Restart Container for 'Docker Swag'"
+  community.docker.docker_container:
+    capabilities: 
+      - "NET_ADMIN"
+    container_default_behavior: compatibility
+    env:
+      TZ: "{{ system.docker.timezone }}"
+      PUID: "{{ user_id.stdout }}"
+      PGID: "{{ group_id.stdout }}"
+      URL: "{{ system.domain }}"
+      SUBDOMAINS: "{{ system.subdomain }}"
+      VALIDATION: "http"
+      EMAIL: "{{ user.email }}"
+      ONLY_SUBDOMAINS: "false"
+      STAGING: "false"
+    name: "DockerSwag"
+    network_mode: default
+    networks:
+      - name: internal_network
+        aliases:
+          - "dockerswag"
+    image: "ghcr.io/linuxserver/swag"
+    state: "started"
+    pull: yes
+    ports:
+      - "80:80"
+      - "443:443"
+    recreate: no
+    restart: yes
+    restart_policy: "unless-stopped"
+    volumes:
+      - "{{ system.docker.store }}/Docker Swag/config:/config"
+      - "{{ system.docker.store }}/Docker Swag/www:/config/www"
+
+- name: "Wait for Docker Swag to be Up @ 'https://{{ system.domain }}:443' fo 60 Secconds"
+  command: "curl --silent -I https://{{ system.domain }}:443"
+  register: result
+  until: result.stdout.find("HTTP/2 200") != -1
+  retries: 60
+  delay: 1
+  changed_when: false

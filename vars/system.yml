@@ -8,3 +8,5 @@ system:
   docker:
     store: '/var/docker-data'
     timezone: 'Europe/Berlin'
+  domain: 'xxx'
+  subdomain: 'www,'
