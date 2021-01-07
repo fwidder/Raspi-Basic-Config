@@ -11,3 +11,8 @@ portainer:
 pihole:
   admin:
     password: xxx
+
+codeserver:
+  password: xxx
+  sudo:
+    password: xxx

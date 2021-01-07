@@ -1,0 +1,30 @@
+---
+# tasks file for Grafana
+- name: "Start Container for 'Grafana'"
+  community.docker.docker_container:
+    container_default_behavior: compatibility
+    env:
+      TZ: "{{ system.docker.timezone }}"
+      GF_SERVER_ROOT_URL: "https://{{ system.domain }}/grafana"
+      GF_SERVER_DOMAIN: "https://{{ system.domain }}/"
+    name: "Grafana"
+    network_mode: default
+    networks:
+      - name: internal_network
+        aliases:
+          - "grafana"
+    image: "grafana/grafana"
+    state: "started"
+    pull: yes
+    ports:
+      - "8082:3000"
+    recreate: yes
+    restart_policy: "unless-stopped"
+
+- name: "Wait for Grafana to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:8082' fo 60 Secconds"
+  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:8082"
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 60
+  delay: 1
+  changed_when: false
