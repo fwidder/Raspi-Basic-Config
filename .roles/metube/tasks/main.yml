@@ -9,7 +9,7 @@
     name: "MeTube"
     network_mode: default
     networks:
-      - name: internal_network
+      - name: external_network
         aliases:
           - "metube"
     image: "alexta69/metube"

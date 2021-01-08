@@ -59,7 +59,7 @@
     name: "DockerSwag"
     network_mode: default
     networks:
-      - name: internal_network
+      - name: external_network
         aliases:
           - "dockerswag"
     image: "ghcr.io/linuxserver/swag"

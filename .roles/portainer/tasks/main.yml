@@ -13,7 +13,7 @@
     name: "Portainer"
     network_mode: default
     networks:
-      - name: internal_network
+      - name: external_network
         aliases:
           - "portainer"
     image: "portainer/portainer"

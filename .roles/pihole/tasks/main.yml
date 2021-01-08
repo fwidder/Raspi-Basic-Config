@@ -15,7 +15,7 @@
     name: "PiHole"
     network_mode: default
     networks:
-      - name: internal_network
+      - name: external_network
         aliases:
           - "pihole"
     image: "pihole/pihole:latest"

@@ -16,3 +16,6 @@ codeserver:
   password: xxx
   sudo:
     password: xxx
+
+grafana:
+  password: xxx

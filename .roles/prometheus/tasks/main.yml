@@ -1,0 +1,52 @@
+---
+# tasks file for Prometheus
+- name: Make Sure Prometheus config-Dir exists
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ system.docker.store }}/Prometheus/etc/prometheus/"
+
+- name: "Copy Config Templates"
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "prometheus.yml.j2" , dest: "{{ system.docker.store }}/Prometheus/etc/prometheus/prometheus.yml"}
+
+- name: "Start Container for 'Prometheus'"
+  community.docker.docker_container:
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.route-prefix=/'
+    container_default_behavior: compatibility
+    env:
+      TZ: "{{ system.docker.timezone }}"
+    name: "Prometheus"
+    network_mode: default
+    networks:
+      - name: internal_network
+        aliases:
+          - "prometheus"
+    image: "ajeetraina/prometheus-armv7"
+    state: "started"
+    pull: yes
+    ports:
+      - "9090:9090"
+    recreate: yes
+    restart_policy: "unless-stopped"
+    volumes:
+      - "{{ system.docker.store }}/Prometheus/etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "{{ system.docker.store }}/Prometheus/var/lib/prometheus:/var/lib/prometheus"
+      - "{{ system.docker.store }}/Prometheus/prometheus:/prometheus"
+      - "{{ system.docker.store }}/Prometheus/etc/prometheus:/etc/prometheus"
+      - "{{ system.docker.store }}/Prometheus/alert.rules:/etc/prometheus/alert.rules"
+
+#- name: "Wait for Prometheus to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:9090/graph' fo 60 Secconds"
+#  command: "curl --silent -i http://{{ hostvars[inventory_hostname].ansible_host }}:9090/graph | head -n 1"
+#  register: result
+#  until: result.stdout.find("200 OK") != -1
+#  retries: 60
+#  delay: 1
+#  changed_when: false

@@ -22,6 +22,6 @@ location ^~ /code-server/ {
     resolver 127.0.0.11 valid=30s;
     set $upstream_app code-server;
     set $upstream_port 8443;
-    set $upstream_proto https;
+    set $upstream_proto http;
     proxy_pass $upstream_proto://$upstream_app:$upstream_port;
 }

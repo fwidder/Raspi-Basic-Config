@@ -1,0 +1,33 @@
+---
+# tasks file for CAdvisor
+- name: "Start Container for 'CAdvisor'"
+  community.docker.docker_container:
+    container_default_behavior: compatibility
+    env:
+      TZ: "{{ system.docker.timezone }}"
+    name: "CAdvisor"
+    network_mode: default
+    networks:
+      - name: internal_network
+        aliases:
+          - "cadvisor"
+    image: "zcube/cadvisor:latest"
+    state: "started"
+    pull: yes
+    ports:
+      - "8085:8080"
+    recreate: yes
+    restart_policy: "unless-stopped"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+- name: "Wait for CAdvisor to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:8085/containers/' fo 60 Secconds"
+  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:8085/containers/"
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 60
+  delay: 1
+  changed_when: false

@@ -9,10 +9,10 @@
       PGID: "{{ group_id.stdout }}"
       PASSWORD: "{{ codeserver.password }}"
       SUDO_PASSWORD: "{{ codeserver.sudo.password }}"
-    name: "Code Server"
+    name: "CodeServer"
     network_mode: default
     networks:
-      - name: internal_network
+      - name: external_network
         aliases:
           - "code-server"
     image: "ghcr.io/linuxserver/code-server"
@@ -25,8 +25,8 @@
     volumes:
       - "{{ system.docker.store }}/Code Server/config:/config"
 
-- name: "Wait for Code Server to be Up @ 'https://{{ hostvars[inventory_hostname].ansible_host }}:8443' fo 60 Secconds"
-  command: "curl --silent -I https://{{ hostvars[inventory_hostname].ansible_host }}:8443"
+- name: "Wait for Code Server to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:8084/login' fo 60 Secconds"
+  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:8084/login"
   register: result
   until: result.stdout.find("200 OK") != -1
   retries: 60
