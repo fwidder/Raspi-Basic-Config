@@ -47,4 +47,7 @@
 
 - name: Make Sure Docker Network exists
   community.general.docker_network:
-    name: internal_network
+    name: "{{ item }}"
+  with_items:
+    - internal_network
+    - external_network

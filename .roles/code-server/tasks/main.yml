@@ -1,0 +1,34 @@
+---
+# tasks file for Code Server
+- name: "Start Container for 'Code Server'"
+  community.docker.docker_container:
+    container_default_behavior: compatibility
+    env:
+      TZ: "{{ system.docker.timezone }}"
+      PUID: "{{ user_id.stdout }}"
+      PGID: "{{ group_id.stdout }}"
+      PASSWORD: "{{ codeserver.password }}"
+      SUDO_PASSWORD: "{{ codeserver.sudo.password }}"
+    name: "CodeServer"
+    network_mode: default
+    networks:
+      - name: external_network
+        aliases:
+          - "code-server"
+    image: "ghcr.io/linuxserver/code-server"
+    state: "started"
+    pull: yes
+    ports:
+      - "8084:8443"
+    recreate: yes
+    restart_policy: "unless-stopped"
+    volumes:
+      - "{{ system.docker.store }}/Code Server/config:/config"
+
+- name: "Wait for Code Server to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:8084/login' fo 60 Secconds"
+  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:8084/login"
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 60
+  delay: 1
+  changed_when: false

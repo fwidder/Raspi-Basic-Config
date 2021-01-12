@@ -20,7 +20,7 @@
     name: "Dokuwiki"
     network_mode: default
     networks:
-      - name: internal_network
+      - name: external_network
         aliases:
           - "dokuwiki"
     image: "ghcr.io/linuxserver/dokuwiki"

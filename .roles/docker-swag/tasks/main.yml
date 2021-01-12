@@ -28,7 +28,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items:
-    - { src: "config/dokuwiki.subfolder.conf.sample" , dest: "{{ system.docker.store }}/Docker Swag/config/nginx/proxy-confs/dokuwiki.subfolder.conf.sample"}
+    - { src: "config/code-server.subfolder.conf.sample" , dest: "{{ system.docker.store }}/Docker Swag/config/nginx/proxy-confs/code-server.subfolder.conf.sample"}
 
 - name: "Get UID for User {{ user.name }}"
   shell: "id -u {{ user.name }}"
@@ -58,7 +58,7 @@
     name: "DockerSwag"
     network_mode: default
     networks:
-      - name: internal_network
+      - name: external_network
         aliases:
           - "dockerswag"
     image: "ghcr.io/linuxserver/swag"
@@ -87,6 +87,9 @@
     - "dokuwiki"
     - "pihole"
     - "portainer"
+    - "grafana"
+    - "metube"
+    - "code-server"
 
 - name: "Restart Container for 'Docker Swag'"
   community.docker.docker_container:

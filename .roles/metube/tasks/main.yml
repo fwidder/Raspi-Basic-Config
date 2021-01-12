@@ -1,0 +1,33 @@
+---
+# tasks file for MeTube
+- name: "Start Container for 'MeTube'"
+  community.docker.docker_container:
+    container_default_behavior: compatibility
+    env:
+      TZ: "{{ system.docker.timezone }}"
+      URL_PREFIX: "/metube"
+    name: "MeTube"
+    network_mode: default
+    networks:
+      - name: external_network
+        aliases:
+          - "metube"
+    image: "fwidder/metube"
+    # Switch back when merged: https://github.com/alexta69/metube/pull/13
+    # image: "alexta69/metube"
+    state: "started"
+    pull: yes
+    ports:
+      - "8083:8081"
+    volumes:
+      - "{{ system.docker.store }}/MeTube/downloads:/downloads"
+    recreate: yes
+    restart_policy: "unless-stopped"
+
+- name: "Wait for MeTube to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:8083/metube/' fo 60 Secconds"
+  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:8083/metube/"
+  register: result
+  until: result.stdout.find("200 OK") != -1
+  retries: 60
+  delay: 1
+  changed_when: false
