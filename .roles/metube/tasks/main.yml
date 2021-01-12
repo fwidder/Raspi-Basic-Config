@@ -11,6 +11,7 @@
 - name: "Start Container for 'MeTube'"
   community.docker.docker_container:
     container_default_behavior: compatibility
+    dns_servers: "{{ system.dns_server }}"
     env:
       TZ: "{{ system.docker.timezone }}"
       URL_PREFIX: "/metube"
@@ -39,3 +40,10 @@
   retries: 60
   delay: 1
   changed_when: false
+
+- name: Delete Downloads every Day
+  cron:
+    name: "Delete Downloads every Day"
+    minute: "0"
+    hour: "3"
+    job: "find {{ system.docker.store }}/MeTube/downloads/ -type f -delete"
