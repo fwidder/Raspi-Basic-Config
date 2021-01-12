@@ -12,7 +12,9 @@
       - name: external_network
         aliases:
           - "metube"
-    image: "alexta69/metube"
+    image: "fwidder/metube"
+    # Switch back when merged: https://github.com/alexta69/metube/pull/13
+    # image: "alexta69/metube"
     state: "started"
     pull: yes
     ports:
@@ -22,8 +24,8 @@
     recreate: yes
     restart_policy: "unless-stopped"
 
-- name: "Wait for MeTube to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:8083' fo 60 Secconds"
-  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:8083"
+- name: "Wait for MeTube to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:8083/metube/' fo 60 Secconds"
+  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:8083/metube/"
   register: result
   until: result.stdout.find("200 OK") != -1
   retries: 60

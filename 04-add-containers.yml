@@ -9,10 +9,9 @@
   roles:
     - portainer
     - pihole
-    - dokuwiki
-  # Not Starting ...  
-  #  - metube
-    - code-server
+    - dokuwiki 
+    - metube
+  #  - code-server
     - cadvisor
     - prometheus
     - grafana
