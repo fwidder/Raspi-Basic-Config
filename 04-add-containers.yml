@@ -12,6 +12,7 @@
     - dokuwiki 
     - metube
   #  - code-server
+    - fileserver
     - cadvisor
     - prometheus
     - grafana
