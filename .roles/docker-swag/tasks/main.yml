@@ -29,6 +29,7 @@
     dest: "{{ item.dest }}"
   with_items:
     - { src: "config/code-server.subfolder.conf.sample" , dest: "{{ system.docker.store }}/Docker Swag/config/nginx/proxy-confs/code-server.subfolder.conf.sample"}
+    - { src: "config/fileserver.subfolder.conf.sample" , dest: "{{ system.docker.store }}/Docker Swag/config/nginx/proxy-confs/fileserver.subfolder.conf.sample"}
 
 - name: "Get UID for User {{ user.name }}"
   shell: "id -u {{ user.name }}"
@@ -73,23 +74,16 @@
       - "{{ system.docker.store }}/Docker Swag/config:/config"
       - "{{ system.docker.store }}/Docker Swag/www:/config/www"
 
-- name: "Wait for Docker Swag to be Up @ 'https://{{ system.domain }}:443' fo 60 Secconds"
-  command: "curl --silent -I https://{{ system.domain }}:443"
-  register: result
-  until: result.stdout.find("HTTP/2 200") != -1
-  retries: 60
-  delay: 1
-  changed_when: false
-
 - name: Enable Proxys
   include_tasks: proxys.yml
   with_items:
+    - "code-server"
     - "dokuwiki"
-    - "pihole"
-    - "portainer"
+    - "fileserver"
     - "grafana"
     - "metube"
-    - "code-server"
+    - "pihole"
+    - "portainer"
 
 - name: "Restart Container for 'Docker Swag'"
   community.docker.docker_container:
