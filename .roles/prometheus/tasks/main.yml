@@ -33,7 +33,7 @@
     state: "started"
     pull: yes
     ports:
-      - "9090:9090"
+      - "8088:9090"
     recreate: yes
     restart_policy: "unless-stopped"
     volumes:
@@ -43,8 +43,9 @@
       - "{{ system.docker.store }}/Prometheus/etc/prometheus:/etc/prometheus"
       - "{{ system.docker.store }}/Prometheus/alert.rules:/etc/prometheus/alert.rules"
 
-#- name: "Wait for Prometheus to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:9090/graph' fo 60 Secconds"
-#  command: "curl --silent -i http://{{ hostvars[inventory_hostname].ansible_host }}:9090/graph | head -n 1"
+# FixMe
+#- name: "Wait for Prometheus to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:8088/graph' fo 60 Secconds"
+#  command: "curl --silent -i http://{{ hostvars[inventory_hostname].ansible_host }}:8088/graph | head -n 1"
 #  register: result
 #  until: result.stdout.find("200 OK") != -1
 #  retries: 60

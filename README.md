@@ -86,7 +86,17 @@ Run the Ansible-Playbooks in the right order
 
 | Anwendung     | Protocol      | Port  |
 |---------------|---------------|-------|
-| Docker Swag   | HTTPS         | 443   |
-| PiHole        | HTTP          | 8080  |
+| Docker Swag   | HTTPS         | 443 ¹ |
+| PiHole        | HTTP          | 8080 ²|
 | Dokuwiki      | HTTP          | 8081  |
-| Portainer     | HTTP          | 9000  |
+| Grafana       | HTTP          | 8082  |
+| MeTube        | HTTP          | 8083  |
+| Code-Server   | HTTP          | 8084  |
+| CAdvisor      | HTTP          | 8085  |
+| Fileserver    | HTTP          | 8086  |
+| Portainer     | HTTP          | 8087  |
+| Prometheus    | HTTP          | 8088  |
+
+¹ : Docker Swag öffnet auch Port 80 (HTTP), leitet diesen aber auf Port 443 (HTTPS) weiter.
+
+² : PiHole öffnet auch die Ports 53 (TCP und UDP) sowie 67 um DNS-Request anzunehmen und zu beantworten.
