@@ -15,15 +15,11 @@
   <div class="container">
     <h1>Inhalt</h1>
     <div class="list-group">
-      <a href="/" class="list-group-item list-group-item-action">Nginx</a>
+      {% if 'code-server' in role_names %}
+      <a href="/code-server" class="list-group-item list-group-item-action">Code Server</a>
+      {% endif %}
       {% if 'dokuwiki' in role_names %}
       <a href="/dokuwiki" class="list-group-item list-group-item-action">Dokuwiki</a>
-      {% endif %}
-      {% if 'pihole' in role_names %}
-      <a href="/pihole/admin" class="list-group-item list-group-item-action">PiHole</a>
-      {% endif %}
-      {% if 'portainer' in role_names %}
-      <a href="/portainer" class="list-group-item list-group-item-action">Portainer</a>
       {% endif %}
       {% if 'grafana' in role_names %}
       <a href="/grafana" class="list-group-item list-group-item-action">Grafana</a>
@@ -31,8 +27,12 @@
       {% if 'metube' in role_names %}
       <a href="/metube" class="list-group-item list-group-item-action">MeTube</a>
       {% endif %}
-      {% if 'code-server' in role_names %}
-      <a href="/code-server" class="list-group-item list-group-item-action">Code Server</a>
+      <a href="/" class="list-group-item list-group-item-action">Nginx</a>
+      {% if 'pihole' in role_names %}
+      <a href="/pihole/admin" class="list-group-item list-group-item-action">PiHole</a>
+      {% endif %}
+      {% if 'portainer' in role_names %}
+      <a href="/portainer" class="list-group-item list-group-item-action">Portainer</a>
       {% endif %}
     </div>
   </div>
