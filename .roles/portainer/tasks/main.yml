@@ -16,7 +16,7 @@
       - name: external_network
         aliases:
           - "portainer"
-    image: "portainer/portainer"
+    image: "portainer/portainer-ce"
     state: "started"
     pull: yes
     ports:

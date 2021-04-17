@@ -5,10 +5,14 @@ system:
     - nano
     - python3-pip
     - apache2-utils
+    - bash
   docker:
-    store: '/var/docker-data'
+    store: '/home/{{ user.name }}/docker-data'
     timezone: 'Europe/Berlin'
-  domain: 'xxx'
-  subdomain: 'www,'
+  domain: 'fwidder.de'
+  subdomain: 'server'
   proxy:
     overwriteconfig: yes
+  dns_server:
+    - "8.8.8.8"
+    - "8.8.4.4"

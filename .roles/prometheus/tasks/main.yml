@@ -29,7 +29,7 @@
       - name: internal_network
         aliases:
           - "prometheus"
-    image: "ajeetraina/prometheus-armv7"
+    image: "prom/prometheus"
     state: "started"
     pull: yes
     ports:

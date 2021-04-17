@@ -58,25 +58,19 @@ Run the Ansible-Playbooks in the right order
     ansible-galaxy collection install -r requirements-collections.yml
     ```
 
-2. Create the new User for the Raspi defined in `vars/user.yml`
+2. Create the new User defined in `vars/user.yml`
 
     ```bash
     ansible-playbook 01-create-remote-user.yml
     ```
 
-3. Remove the 'pi' User and Group
+3. Update the System and install needed Packages defined in `vars/system.yml`
 
     ```bash
-    ansible-playbook 02-remove-pi-user.yml
+    ansible-playbook 02-update-and-install-software.yml
     ```
 
-4. Update the System and install needed Packages defined in `vars/system.yml`
-
-    ```bash
-    ansible-playbook 03-update-and-install-software.yml
-    ```
-
-5. Add Docker Containers defined in `04-add-containers.yml`
+4. Add Docker Containers defined in `03-add-containers.yml`
 
     ```bash
     ansible-playbook 04-add-containers.yml
@@ -96,6 +90,9 @@ Run the Ansible-Playbooks in the right order
 | Fileserver    | HTTP          | 8086  |
 | Portainer     | HTTP          | 8087  |
 | Prometheus    | HTTP          | 8088  |
+| GitLab        | SSH           | 8089  |
+| GitLab        | HTTP          | 8090  |
+| GitLab        | HTTPS         | 8091  |
 
 ¹ : Docker Swag öffnet auch Port 80 (HTTP), leitet diesen aber auf Port 443 (HTTPS) weiter.
 

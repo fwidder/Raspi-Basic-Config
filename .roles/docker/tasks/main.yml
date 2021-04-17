@@ -1,5 +1,23 @@
 ---
 # tasks file for docker
+- name: Set sysctl File Limits
+  become: yes
+  copy:
+    src: 50-fs.conf
+    dest: /etc/sysctl.d
+
+- name: Set Shell File Limits
+  become: yes
+  copy:
+    src: 91-nofiles.conf
+    dest: /etc/security/limits.d
+
+- name: Reboot machine
+  become: yes
+  reboot:
+    msg: "Reboot initiated by Ansible for kernel"
+    # TODO: Only if Limits changed
+
 - name: Check is docker installed
   shell: command -v docker
   register: is_docker_installed
@@ -28,12 +46,26 @@
       - docker-compose
     state: present
 
+- name: "Make sure latest Pip Version is installed"
+  become: yes
+  shell: pip3 install --upgrade pip
+  args:
+    chdir: /tmp/
+
 - name: "Make sure Docker Pip Packages are installed"
   become: yes
   pip:
     name: 
-      - docker-py
+      - docker
       - docker-compose
+    state: latest
+
+- name: "Make shure old Docker Pip Packages are not installed"
+  become: yes
+  pip:
+    name: 
+      - docker-py
+    state: absent
 
 - name: Make Sure Docker Data-Dir exists
   become: yes
@@ -41,7 +73,7 @@
     path: "{{ system.docker.store }}"
     state: directory
     mode: 0777
-    user: "{{ user.name }}"
+    owner: "{{ user.name }}"
     group: "{{ user.name }}"
     recurse: yes
 

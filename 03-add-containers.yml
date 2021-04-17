@@ -7,13 +7,13 @@
     - ansible_user: "{{ user.name }}"
     - ansible_password: "{{ user.password }}"
   roles:
-    - portainer
-    - pihole
-    - dokuwiki 
-    - metube
+  #  - portainer
+  #  - dokuwiki 
+  #  - metube
+    - gitlab
+  #  - fileserver
+  #  - cadvisor
   #  - code-server
-    - fileserver
-    - cadvisor
-    - prometheus
-    - grafana
-    - docker-swag
+  #  - prometheus
+  #  - grafana
+  #  - docker-swag

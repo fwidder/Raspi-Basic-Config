@@ -74,6 +74,8 @@
       - "{{ system.docker.store }}/Docker Swag/config:/config"
       - "{{ system.docker.store }}/Docker Swag/www:/config/www"
 
+# Delete {{ system.docker.store }}/Docker Swag/config/nginx/proxy-confs/*.config
+
 - name: Enable Proxys
   include_tasks: proxys.yml
   with_items:
@@ -98,12 +100,12 @@
       SUBDOMAINS: "{{ system.subdomain }}"
       VALIDATION: "http"
       EMAIL: "{{ user.email }}"
-      ONLY_SUBDOMAINS: "false"
+      ONLY_SUBDOMAINS: "true"
       STAGING: "false"
     name: "DockerSwag"
     network_mode: default
     networks:
-      - name: internal_network
+      - name: external_network
         aliases:
           - "dockerswag"
     image: "ghcr.io/linuxserver/swag"
@@ -119,8 +121,8 @@
       - "{{ system.docker.store }}/Docker Swag/config:/config"
       - "{{ system.docker.store }}/Docker Swag/www:/config/www"
 
-- name: "Wait for Docker Swag to be Up @ 'https://{{ system.domain }}:443' fo 60 Secconds"
-  command: "curl --silent -I https://{{ system.domain }}:443"
+- name: "Wait for Docker Swag to be Up @ 'https://{{ system.subdomain }}.{{ system.domain }}:443' fo 60 Secconds"
+  command: "curl --silent -I https://{{ system.subdomain }}.{{ system.domain }}:443"
   register: result
   until: result.stdout.find("HTTP/2 200") != -1
   retries: 60

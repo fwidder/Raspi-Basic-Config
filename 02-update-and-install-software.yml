@@ -2,8 +2,11 @@
   gather_facts: no
   vars_files:
     - vars/user.yml
+    - vars/system.yml
   vars:
     - ansible_user: "{{ user.name }}"
     - ansible_password: "{{ user.password }}"
   roles:
-    - remove-pi-user
+    - update
+    - reboot
+    - docker

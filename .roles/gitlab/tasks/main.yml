@@ -1,0 +1,41 @@
+---
+# tasks file for GitLab
+- name: "Start Container for 'GitLab'"
+  community.docker.docker_container:
+    container_default_behavior: compatibility
+    name: "GitLab"
+    env:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://{{ hostvars[inventory_hostname].ansible_host }}:8090'
+        gitlab_rails['gitlab_shell_ssh_port'] = 8089
+        gitlab_rails['initial_root_password'] = '{{ gitlab.password }}'
+        gitlab_rails['lfs_enabled'] = true
+    network_mode: default
+    networks:
+      - name: external_network
+        aliases:
+          - "gitlab"
+    image: "gitlab/gitlab-ce"
+    state: "started"
+    pull: yes
+    ports:
+      - "8089:8089"
+      - "8090:8090"
+    recreate: yes
+    restart_policy: "always"
+    volumes:
+      - "{{ system.docker.store }}/GitLab/config:/etc/gitlab"
+      - "{{ system.docker.store }}/GitLab/logs:/var/log/gitlab"
+      - "{{ system.docker.store }}/GitLab/data:/var/opt/gitlab"
+    hostname: "{{ hostvars[inventory_hostname].ansible_host }}"
+    ulimits:
+      - nproc:65535:65535
+      - nofile:65535:65535
+
+#- name: "Wait for Code Server to be Up @ 'http://{{ hostvars[inventory_hostname].ansible_host }}:8084/login' fo 60 Secconds"
+#  command: "curl --silent -I http://{{ hostvars[inventory_hostname].ansible_host }}:8084/login"
+#  register: result
+#  until: result.stdout.find("200 OK") != -1
+#  retries: 60
+#  delay: 1
+#  changed_when: false

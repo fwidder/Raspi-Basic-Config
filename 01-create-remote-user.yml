@@ -3,7 +3,6 @@
   vars_files:
     - vars/user.yml
   vars:
-    - ansible_user: pi
-    - ansible_password: raspberry
+    - ansible_user: root
   roles:
-    - create-raspi-user
+    - create-user

@@ -1,13 +1,16 @@
 ---
-# tasks file for create-raspi-user
-- name: "Ensure group '{{ user.name }}' and 'docker' exists"
+# tasks file for create-user
+- name: "Ensure group 'docker' exists"
   become: yes
   group:
-    name: "{{ item }}"
+    name: "docker"
     state: present
-  loop_with:
-    - "docker"
-    - {{ user.name }}
+
+- name: "Ensure group '{{ user.name }}' exists"
+  become: yes
+  group:
+    name: "{{ user.name }}"
+    state: present
 
 - name: "Ensure user '{{ user.name }}' exists"
   become: yes
@@ -18,6 +21,7 @@
     generate_ssh_key: yes
     ssh_key_bits: 4096
     ssh_key_file: .ssh/id_rsa
+    shell: "{{ user.shell }}"
 
 - name: "Ensure user '{{ user.name }}' is in all needed Groups"
   become: yes
@@ -35,10 +39,6 @@
       - games
       - users
       - input
-      - netdev
-      - gpio
-      - i2c
-      - spi
     append: yes
 
 - name: "Ensure using 'sudo' without password is enabeld for Group 'sudo'"

@@ -21,9 +21,7 @@
       - name: external_network
         aliases:
           - "metube"
-    image: "fwidder/metube"
-    # Switch back when merged: https://github.com/alexta69/metube/pull/13
-    # image: "alexta69/metube"
+    image: "alexta69/metube"
     state: "started"
     pull: yes
     ports:

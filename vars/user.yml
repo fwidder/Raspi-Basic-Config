@@ -1,21 +1,25 @@
 user:
-  name: xxx
-  fullname: xxx
-  password: xxx
-  email: 'xxx'
+  name: fwidder
+  fullname: Florian Widder
+  password: Lion1995@2207!2662456838
+  email: 'florian.widder@live.de'
+  shell: '/bin/bash'
 
 portainer:
   admin:
-    password: xxx
+    password: Lion1995@2207!
 
 pihole:
   admin:
-    password: xxx
+    password: Lion1995@2207!
 
 codeserver:
-  password: xxx
+  password: Lion1995@2207!
   sudo:
-    password: xxx
+    password: Lion1995@2207!
 
 grafana:
-  password: xxx
+  password: Lion1995@2207!
+
+gitlab:
+  password: Lion1995@2207!
